@@ -9,10 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
- * SpEL-callable checks used from @PreAuthorize (e.g. "@access.isSelfStudent
- * (#studentId)") so a STUDENT-role token can only reach data belonging to
- * the account it authenticated as, rather than any studentId passed on the
- * URL. Referenced as the bean name "access".
+ * SpEL-callable checks used from @PreAuthorize so
+ * a STUDENT-role token can only reach data belonging to
+ * the account it authenticated as
  */
 @Component("access")
 @RequiredArgsConstructor

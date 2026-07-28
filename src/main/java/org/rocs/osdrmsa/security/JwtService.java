@@ -30,9 +30,7 @@ public class JwtService {
     private static final String CLAIM_PERSON_ID = "personId";
 
     /**
-     * Must match application.properties' fallback for jwt.secret. If this
-     * value is ever in effect outside a dev/local/test profile, every
-     * token this service issues is forgeable by anyone who read the repo.
+     * Must match application.properties' fallback for jwt.secret.
      */
     private static final String INSECURE_DEFAULT_SECRET = "dev-only-insecure-secret-change-me";
     private static final Set<String> SECRET_EXEMPT_PROFILES = Set.of("dev", "local", "test");
@@ -42,10 +40,7 @@ public class JwtService {
 
     /**
      * Spring-facing constructor. Reads the real active-profiles list off
-     * Environment rather than the "spring.profiles.active" property,
-     * because @ActiveProfiles in tests sets Environment.getActiveProfiles()
-     * directly without ever populating that property - a @Value lookup on
-     * it stays empty even when a profile is genuinely active.
+     * Environment rather than the "spring.profiles.active" property
      */
     @Autowired
     public JwtService(

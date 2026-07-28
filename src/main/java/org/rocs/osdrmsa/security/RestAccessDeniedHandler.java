@@ -11,12 +11,7 @@ import java.io.IOException;
 
 /**
  * Handles authenticated-but-insufficient-role denials at the filter-chain
- * level (as opposed to @PreAuthorize denials inside a controller method,
- * which GlobalExceptionHandler already handles via its own
- * AccessDeniedException mapping). Kept in sync with that handler's JSON
- * shape and status code (403) - unlike the reference implementation on the
- * SECURITY-Security-Constants branch, which has this and the 401 case
- * swapped.
+ * level
  */
 @Component
 public class RestAccessDeniedHandler implements AccessDeniedHandler {
