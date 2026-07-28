@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: osdrmsa-appl
+
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:oracleDB
+    username: rcosd
+    password: Changeme0
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+
+  jpa:
+    database-platform: org.hibernate.dialect.OracleDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
