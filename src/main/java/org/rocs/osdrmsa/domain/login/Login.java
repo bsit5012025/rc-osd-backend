@@ -2,45 +2,62 @@ package org.rocs.osdrmsa.domain.login;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.rocs.osdrmsa.domain.person.Person;
+import org.rocs.osdrmsa.domain.person.employee.Employee;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "LOGIN")
 public class Login {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "PERSONID")
-    private Person person;
-
-    @Column(name = "USERNAME", nullable = false, unique = true, length = 25)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "JOIN_DATE")
-    private LocalDateTime joinDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "join_date", nullable = false, updatable = false)
+    private Date joinDate;
 
-    @Column(name = "LAST_LOGIN_DATE")
-    private LocalDateTime lastLoginDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_login_date")
+    private Date lastLoginDate;
 
-    @Column(name = "ROLE")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
-    @Column(name = "AUTHORITIES")
+    @Column(name = "authorities")
     private String authorities;
 
-    @Column(name = "IS_ACTIVE")
-    private Boolean active;
+    @JdbcTypeCode(SqlTypes.INTEGER)
+    @Column(name = "is_active", nullable = false)
+    private boolean active = true;
 
-    @Column(name = "IS_LOCKED")
-    private Boolean locked;
+    @JdbcTypeCode(SqlTypes.INTEGER)
+    @Column(name = "is_locked", nullable = false)
+    private boolean locked = false;
+
+    @OneToOne
+    @JoinColumn(name = "personID")
+    private Person person;
+
+    @Transient
+    private Employee employee;
+
+    @PrePersist
+    protected void onCreate() {
+        if (joinDate == null) {
+            joinDate = new Date();
+        }
+    }
 }
