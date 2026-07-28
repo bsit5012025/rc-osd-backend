@@ -23,27 +23,22 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Login authenticate(String username, String password) {
 
-        if (username == null || username.isBlank()
-                || password == null || password.isBlank()) {
+        if (username == null || username.isBlank() || password == null || password.isBlank()) {
             throw new InvalidCredentialsException("Username and password are required.");
         }
 
-        Login login = loginRepository.findByUsername(username)
-                .orElseThrow(() ->
-                        new InvalidCredentialsException("Invalid username or password."));
+        Login login = loginRepository.findByUsername(username).orElseThrow(() -> new InvalidCredentialsException("Invalid username or password."));
 
         if (!passwordEncoder.matches(password, login.getPassword())) {
             throw new InvalidCredentialsException("Invalid username or password.");
         }
 
         if (login.isLocked()) {
-            throw new AccountLockedException(
-                    "This account is locked. Please contact the OSD office.");
+            throw new AccountLockedException("This account is locked. Please contact the OSD office.");
         }
 
         if (!login.isActive()) {
-            throw new AccountInactiveException(
-                    "This account is inactive. Please contact the OSD office.");
+            throw new AccountInactiveException("This account is inactive. Please contact the OSD office.");
         }
 
         login.setLastLoginDate(new Date());
