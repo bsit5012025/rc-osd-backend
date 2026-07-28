@@ -1,0 +1,14 @@
+package org.rocs.osdrmsa.service.appeal;
+
+import org.rocs.osdrmsa.domain.appeal.Appeal;
+
+import java.util.List;
+
+public interface AppealService {
+
+    List<Appeal> getAppealsByStatus(String status);
+
+    void approveAppeal(Long appealId, String remarks);
+
+    void denyAppeal(Long appealId, String remarks);
+}

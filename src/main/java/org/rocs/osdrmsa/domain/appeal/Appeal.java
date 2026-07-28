@@ -3,6 +3,7 @@ package org.rocs.osdrmsa.domain.appeal;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.rocs.osdrmsa.domain.enrollment.Enrollment;
+import org.rocs.osdrmsa.domain.record.Record;
 
 import java.time.LocalDate;
 
