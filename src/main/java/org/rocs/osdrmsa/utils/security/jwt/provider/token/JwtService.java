@@ -1,4 +1,4 @@
-package org.rocs.osdrmsa.security;
+package org.rocs.osdrmsa.utils.security.jwt.provider.token;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -17,11 +17,6 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
-/**
- * Issues and validates JWTs for authenticated Login accounts.
- * Token carries the username plus the account's role/authorities as claims
- * so downstream requests can be authorized without a DB round-trip.
- */
 @Service
 public class JwtService {
 
