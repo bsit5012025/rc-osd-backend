@@ -5,6 +5,7 @@ import org.rocs.osdrmsa.domain.appeal.Appeal;
 import org.rocs.osdrmsa.dto.request.AppealRequest;
 import org.rocs.osdrmsa.service.appeal.AppealService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,11 +18,13 @@ public class AppealController {
     private final AppealService appealService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_PREFECT')")
     public List<Appeal> getAppeals(@RequestParam String status) {
         return appealService.getAppealsByStatus(status);
     }
 
     @PutMapping("/{id}/approve")
+    @PreAuthorize("hasAuthority('ROLE_PREFECT')")
     public ResponseEntity<Void> approve(@PathVariable Long id, @RequestBody AppealRequest request) {
 
         appealService.approveAppeal(id, request.remarks());
@@ -29,6 +32,7 @@ public class AppealController {
     }
 
     @PutMapping("/{id}/deny")
+    @PreAuthorize("hasAuthority('ROLE_PREFECT')")
     public ResponseEntity<Void> deny(@PathVariable Long id, @RequestBody AppealRequest request) {
 
         appealService.denyAppeal(id, request.remarks());
