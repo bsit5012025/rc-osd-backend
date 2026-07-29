@@ -1,4 +1,4 @@
-package org.rocs.osdrmsa.security;
+package org.rocs.osdrmsa.utils.security;
 
 import lombok.RequiredArgsConstructor;
 import org.rocs.osdrmsa.domain.login.Login;
@@ -8,11 +8,6 @@ import org.rocs.osdrmsa.repository.student.StudentRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-/**
- * SpEL-callable checks used from @PreAuthorize so
- * a STUDENT-role token can only reach data belonging to
- * the account it authenticated as
- */
 @Component("access")
 @RequiredArgsConstructor
 public class OwnAccessEvaluator {
