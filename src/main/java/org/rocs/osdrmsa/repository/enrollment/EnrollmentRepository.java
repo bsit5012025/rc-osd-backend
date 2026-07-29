@@ -13,4 +13,5 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
     Optional<Enrollment> findTopByStudentStudentIdOrderBySchoolYearDesc(String studentId);
 
+    Optional<Enrollment> findLatestByStudent_StudentIdOrderBySchoolYearDesc(String studentId);
 }
