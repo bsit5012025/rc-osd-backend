@@ -2,40 +2,38 @@ package org.rocs.osdrmsa.domain.request;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.rocs.osdrmsa.domain.person.employee.Employee;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "REQUEST")
 public class Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "REQUESTID")
-    private Long requestId;
+    @Column(name = "requestID", nullable = false, updatable = false)
+    private long requestID;
 
-    @ManyToOne
-    @JoinColumn(name = "EMPLOYEEID")
-    private Employee employee;
+    @Column(name = "employeeID", nullable = false)
+    private String employeeID;
 
-    @Column(name = "DETAILS")
+    @Column(name = "details", nullable = false)
     private String details;
 
-    @Column(name = "MESSAGE")
+    @Column(name = "message", nullable = false)
     private String message;
 
-    @Column(name = "TYPE")
+    @Column(name = "type", nullable = false)
     private String type;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS")
+    @Column(name = "status", nullable = false)
     private RequestStatus status;
 
-    @Column(name = "DATEPROCESSED")
-    private LocalDate dateProcessed;
+    @Column(name = "dateProcessed")
+    private Date dateProcessed;
 
-    @Column(name = "REMARKS")
+    @Column(name = "remarks")
     private String remarks;
+
 }
