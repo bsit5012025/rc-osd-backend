@@ -27,12 +27,16 @@ public class RecordServiceImpl implements RecordService {
                 || record.getEmployee() == null
                 || record.getEmployee().getEmployeeId() == null
                 || record.getDateOfViolation() == null) {
-            return null;
+            throw new IllegalArgumentException(
+                    "Record or record employee, employeeId, or Date of violation are null."
+            );
         }
 
         if (record.getRemarks() != null
                 && record.getRemarks().length() > 500) {
-            return null;
+           throw new IllegalArgumentException(
+                   "Record Remarks is null and must not exceed 500 characters."
+           );
         }
 
         record.setRecordId(0L);
@@ -49,12 +53,16 @@ public class RecordServiceImpl implements RecordService {
                 || record.getEmployee() == null
                 || record.getEmployee().getEmployeeId() == null
                 || record.getDateOfViolation() == null) {
-            return null;
+            throw new IllegalArgumentException(
+                    "Record or record employee, employeeId, or Date of violation are null."
+            );
         }
 
         if (record.getRemarks() != null
                 && record.getRemarks().length() > 500) {
-            return null;
+            throw new IllegalArgumentException(
+                    "Record Remarks is null and must not exceed 500 characters."
+            );
         }
 
         if (!recordRepository.existsById(record.getRecordId())) {
@@ -71,7 +79,9 @@ public class RecordServiceImpl implements RecordService {
                 .orElse(null);
 
         if (record == null) {
-            return null;
+            throw new IllegalArgumentException(
+                    "Resolve Records are not found."
+            );
         }
 
         record.setStatus(RecordStatus.RESOLVED);
@@ -96,6 +106,5 @@ public class RecordServiceImpl implements RecordService {
                         department,
                         schoolYear);
     }
-
 
 }
