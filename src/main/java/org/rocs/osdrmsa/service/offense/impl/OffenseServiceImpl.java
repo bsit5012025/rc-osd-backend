@@ -19,7 +19,12 @@ public class OffenseServiceImpl implements OffenseService {
 
     @Override
     public List<Offense> getAll() {
-        return offenseRepository.findAllByOrderByOffenseAsc();
+        return offenseRepository.findAll();
+    }
+
+    @Override
+    public List<Offense> getByType(String type) {
+        return offenseRepository.findByType(type);
     }
 
     @Override
@@ -28,13 +33,8 @@ public class OffenseServiceImpl implements OffenseService {
     }
 
     @Override
-    public Optional<Offense> getByName(String offense) {
-        return offenseRepository.findByOffense(offense);
-    }
-
-    @Override
     public Offense create(Offense offense) {
-        offense.setOffenseId(null);
+        offense.setOffenseId(0L);
         return offenseRepository.save(offense);
     }
 
