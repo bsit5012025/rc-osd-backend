@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OffenseService {
+
     List<Offense> getAll();
 
-    Optional<Offense> getById(Long id);
+    List<Offense> getByType(String type);
 
-    Optional<Offense> getByName(String offense);
+    Optional<Offense> getById(Long id);
 
     Offense create(Offense offense);
 
