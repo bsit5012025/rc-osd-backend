@@ -7,24 +7,31 @@ import org.rocs.osdrmsa.domain.person.Person;
 
 @Entity
 @Data
-@Table(name = "STUDENT")
 public class Student {
 
     @Id
-    @Column(name = "STUDENTID")
+    @Column(name = "studentID", nullable = false, updatable = false)
     private String studentId;
 
     @OneToOne
-    @JoinColumn(name = "PERSONID")
+    @JoinColumn(name = "personID")
     private Person person;
 
-    @Column(name = "ADDRESS")
+    @Column(name = "address")
     private String address;
 
-    @Column(name = "STUDENTTYPE")
+    @Column(name = "studentType")
     private String studentType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "DEPARTMENT")
+    @Column(name = "department")
     private Department department;
+
+    @ManyToMany
+    @JoinTable(
+            name = "studentGuardian",
+            joinColumns = @JoinColumn(name = "studentID"),
+            inverseJoinColumns = @JoinColumn(name = "guardianID"))
+    private java.util.List<org.rocs.osdrmsa.domain.person.guardian.Guardian> guardians = new java.util.ArrayList<>();
+
 }
