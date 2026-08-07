@@ -6,22 +6,20 @@ import org.rocs.osdrmsa.domain.person.Person;
 
 @Entity
 @Data
-@Table(name = "GUARDIAN")
 public class Guardian {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "GUARDIANID")
-    private Long guardianId;
+    @Column(name = "guardianID", nullable = false, updatable = false)
+    private long guardianID;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "PERSONID")
+    @OneToOne
+    @JoinColumn(name = "personID")
     private Person person;
 
-    @Column(name = "CONTACTNUMBER")
+    @Column(name = "contactNumber")
     private String contactNumber;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "RELATIONSHIP")
-    private Relationship relationship;
+    @Column(name = "relationship")
+    private String relationship;
 }
