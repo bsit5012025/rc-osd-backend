@@ -1,4 +1,4 @@
-package org.rocs.osdrmsa.controller.common.dtosummary;
+package org.rocs.osdrmsa.controller.common.dto;
 
 import org.rocs.osdrmsa.domain.record.RecordStatus;
 

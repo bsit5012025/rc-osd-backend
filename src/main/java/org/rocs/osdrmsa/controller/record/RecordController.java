@@ -1,9 +1,9 @@
 package org.rocs.osdrmsa.controller.record;
 
 import lombok.RequiredArgsConstructor;
-import org.rocs.osdrmsa.dto.request.RecordCreateRequest;
-import org.rocs.osdrmsa.dto.response.RecordResponse;
-import org.rocs.osdrmsa.dto.request.RecordUpdateRequest;
+import org.rocs.osdrmsa.controller.record.dto.RecordCreateRequest;
+import org.rocs.osdrmsa.controller.record.dto.RecordResponse;
+import org.rocs.osdrmsa.controller.record.dto.RecordUpdateRequest;
 import org.rocs.osdrmsa.controller.record.mapper.RecordDtoMapper;
 import org.rocs.osdrmsa.domain.department.Department;
 import org.rocs.osdrmsa.domain.record.Record;
@@ -20,16 +20,6 @@ import java.util.List;
 public class RecordController {
 
     private final RecordService recordService;
-
-    @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT')")
-    public ResponseEntity<RecordResponse> create(@RequestBody RecordCreateRequest request) {
-        Record created = recordService.createStudentRecord(RecordDtoMapper.toEntity(request));
-        if (created == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(RecordDtoMapper.toResponse(created));
-    }
 
     @PutMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT')")

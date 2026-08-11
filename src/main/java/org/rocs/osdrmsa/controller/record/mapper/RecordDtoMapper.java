@@ -1,9 +1,9 @@
 package org.rocs.osdrmsa.controller.record.mapper;
 
 import org.rocs.osdrmsa.controller.common.mapper.CommonDtoMapper;
-import org.rocs.osdrmsa.dto.request.RecordCreateRequest;
-import org.rocs.osdrmsa.dto.response.RecordResponse;
-import org.rocs.osdrmsa.dto.request.RecordUpdateRequest;
+import org.rocs.osdrmsa.controller.record.dto.RecordCreateRequest;
+import org.rocs.osdrmsa.controller.record.dto.RecordResponse;
+import org.rocs.osdrmsa.controller.record.dto.RecordUpdateRequest;
 import org.rocs.osdrmsa.domain.disciplinary.action.DisciplinaryAction;
 import org.rocs.osdrmsa.domain.enrollment.Enrollment;
 import org.rocs.osdrmsa.domain.offense.Offense;
@@ -76,6 +76,4 @@ public final class RecordDtoMapper {
                 record.getRemarks(),
                 record.getStatus());
     }
-
-
 }

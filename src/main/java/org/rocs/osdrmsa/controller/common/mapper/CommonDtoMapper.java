@@ -1,13 +1,25 @@
 package org.rocs.osdrmsa.controller.common.mapper;
 
-import org.rocs.osdrmsa.controller.common.dtosummary.*;
+import org.rocs.osdrmsa.controller.common.dto.ActionSummary;
+import org.rocs.osdrmsa.controller.common.dto.EmployeeSummary;
+import org.rocs.osdrmsa.controller.common.dto.EnrollmentSummary;
+import org.rocs.osdrmsa.controller.common.dto.OffenseSummary;
+import org.rocs.osdrmsa.controller.common.dto.RecordSummary;
+import org.rocs.osdrmsa.controller.common.dto.StudentSummary;
 import org.rocs.osdrmsa.domain.disciplinary.action.DisciplinaryAction;
 import org.rocs.osdrmsa.domain.enrollment.Enrollment;
 import org.rocs.osdrmsa.domain.offense.Offense;
 import org.rocs.osdrmsa.domain.person.Person;
 import org.rocs.osdrmsa.domain.person.employee.Employee;
 import org.rocs.osdrmsa.domain.person.student.Student;
+import org.rocs.osdrmsa.domain.record.Record;
 
+/**
+ * Shared entity-to-summary-DTO conversions used across Record/Appeal/Request
+ * responses. These entity associations are all EAGER-fetched by default
+ * (@ManyToOne/@OneToOne), so they're safe to read here even though this
+ * runs after the originating service call/transaction has returned.
+ */
 public final class CommonDtoMapper {
 
     private CommonDtoMapper() {
@@ -55,6 +67,13 @@ public final class CommonDtoMapper {
         return new ActionSummary(action.getActionId(), action.getAction());
     }
 
+    public static RecordSummary toRecordSummary(Record record) {
+        if (record == null) {
+            return null;
+        }
+        return new RecordSummary(record.getRecordId(), toOffenseSummary(record.getOffense()), record.getStatus());
+    }
+
     private static String fullName(Person person) {
         if (person == null) {
             return null;
@@ -75,5 +94,4 @@ public final class CommonDtoMapper {
         }
         builder.append(part);
     }
-
 }

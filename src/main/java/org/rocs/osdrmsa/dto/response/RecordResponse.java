@@ -1,21 +1,24 @@
 package org.rocs.osdrmsa.dto.response;
 
-import org.rocs.osdrmsa.controller.common.dtosummary.ActionSummary;
-import org.rocs.osdrmsa.controller.common.dtosummary.EmployeeSummary;
-import org.rocs.osdrmsa.controller.common.dtosummary.EnrollmentSummary;
-import org.rocs.osdrmsa.controller.common.dtosummary.OffenseSummary;
 import org.rocs.osdrmsa.domain.record.RecordStatus;
 
 import java.time.LocalDate;
 
 public record RecordResponse(
-        long recordId,
-        EnrollmentSummary enrollment,
-        EmployeeSummary employee,
-        OffenseSummary offense,
+        Long recordId,
+        Long enrollmentId,
+        String studentId,
+        String studentName,
+        String schoolYear,
+        String employeeId,
+        String employeeName,
+        Long offenseId,
+        String offenseName,
         LocalDate dateOfViolation,
-        ActionSummary action,
+        Long actionId,
+        String actionName,
         LocalDate dateOfResolution,
         String remarks,
-        RecordStatus status) {
+        RecordStatus status
+) {
 }
