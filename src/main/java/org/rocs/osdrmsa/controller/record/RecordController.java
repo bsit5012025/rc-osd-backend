@@ -21,6 +21,16 @@ public class RecordController {
 
     private final RecordService recordService;
 
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT')")
+    public ResponseEntity<RecordResponse> create(@RequestBody RecordCreateRequest request) {
+        Record created = recordService.createStudentRecord(RecordDtoMapper.toEntity(request));
+        if (created == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(RecordDtoMapper.toResponse(created));
+    }
+
     @PutMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT')")
     public ResponseEntity<RecordResponse> update(@RequestBody RecordUpdateRequest request) {
