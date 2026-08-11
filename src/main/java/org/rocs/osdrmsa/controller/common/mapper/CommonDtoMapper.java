@@ -14,12 +14,6 @@ import org.rocs.osdrmsa.domain.person.employee.Employee;
 import org.rocs.osdrmsa.domain.person.student.Student;
 import org.rocs.osdrmsa.domain.record.Record;
 
-/**
- * Shared entity-to-summary-DTO conversions used across Record/Appeal/Request
- * responses. These entity associations are all EAGER-fetched by default
- * (@ManyToOne/@OneToOne), so they're safe to read here even though this
- * runs after the originating service call/transaction has returned.
- */
 public final class CommonDtoMapper {
 
     private CommonDtoMapper() {
