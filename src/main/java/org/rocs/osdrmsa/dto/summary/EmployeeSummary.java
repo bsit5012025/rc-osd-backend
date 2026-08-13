@@ -1,4 +1,4 @@
-package org.rocs.osdrmsa.controller.common.dto;
+package org.rocs.osdrmsa.dto.summary;
 
 public record EmployeeSummary(String employeeId, String fullName, String employeeRole) {
 }

@@ -1,4 +1,4 @@
-package org.rocs.osdrmsa.controller.login.dto;
+package org.rocs.osdrmsa.dto.request;
 
 public record LoginRequest(String username, String password) {
 }

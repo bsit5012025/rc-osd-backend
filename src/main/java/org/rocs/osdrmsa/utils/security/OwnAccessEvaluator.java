@@ -36,7 +36,8 @@ public class OwnAccessEvaluator {
             return false;
         }
 
-        return student.getPerson().getPersonId() == login.getPerson().getPersonId();
+        return student.getPerson().getPersonId()
+                .equals(login.getPerson().getPersonId());
     }
 
     private String currentUsername() {

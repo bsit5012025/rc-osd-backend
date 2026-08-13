@@ -1,4 +1,4 @@
-package org.rocs.osdrmsa.controller.request.dto;
+package org.rocs.osdrmsa.dto.request;
 
 import org.rocs.osdrmsa.domain.request.RequestStatus;
 

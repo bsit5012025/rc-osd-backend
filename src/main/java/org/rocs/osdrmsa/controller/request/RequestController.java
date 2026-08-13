@@ -1,10 +1,10 @@
 package org.rocs.osdrmsa.controller.request;
 
 import lombok.RequiredArgsConstructor;
-import org.rocs.osdrmsa.controller.request.dto.RequestDecisionRequest;
-import org.rocs.osdrmsa.controller.request.dto.RequestResponse;
-import org.rocs.osdrmsa.controller.request.dto.RequestSubmitRequest;
-import org.rocs.osdrmsa.controller.request.mapper.RequestDtoMapper;
+import org.rocs.osdrmsa.dto.request.RequestDecisionRequest;
+import org.rocs.osdrmsa.dto.response.RequestResponse;
+import org.rocs.osdrmsa.dto.request.RequestSubmitRequest;
+import org.rocs.osdrmsa.dto.mapper.RequestDtoMapper;
 import org.rocs.osdrmsa.domain.request.Request;
 import org.rocs.osdrmsa.domain.request.RequestStatus;
 import org.rocs.osdrmsa.service.request.RequestService;
