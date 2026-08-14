@@ -1,9 +1,8 @@
-package org.rocs.osdrmsa.controller.record.dto;
+package org.rocs.osdrmsa.dto.request;
 
 import java.time.LocalDate;
 
-public record RecordUpdateRequest(
-        long recordId,
+public record RecordCreateRequest(
         long enrollmentId,
         String employeeId,
         long offenseId,

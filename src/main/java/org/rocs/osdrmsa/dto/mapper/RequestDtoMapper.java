@@ -1,9 +1,9 @@
-package org.rocs.osdrmsa.controller.request.mapper;
+package org.rocs.osdrmsa.dto.mapper;
 
-import org.rocs.osdrmsa.controller.request.dto.RequestResponse;
-import org.rocs.osdrmsa.controller.request.dto.RequestSubmitRequest;
+import org.rocs.osdrmsa.dto.response.RequestResponse;
+import org.rocs.osdrmsa.dto.request.RequestSubmitRequest;
 import org.rocs.osdrmsa.domain.request.Request;
-import org.rocs.osdrmsa.util.DateConversion;
+import org.rocs.osdrmsa.utils.converter.DateConversion;
 
 public final class RequestDtoMapper {
 

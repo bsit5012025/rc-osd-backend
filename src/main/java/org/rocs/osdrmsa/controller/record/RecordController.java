@@ -1,12 +1,12 @@
 package org.rocs.osdrmsa.controller.record;
 
 import lombok.RequiredArgsConstructor;
-import org.rocs.osdrmsa.controller.record.dto.RecordCreateRequest;
-import org.rocs.osdrmsa.controller.record.dto.RecordResponse;
-import org.rocs.osdrmsa.controller.record.dto.RecordUpdateRequest;
-import org.rocs.osdrmsa.controller.record.mapper.RecordDtoMapper;
+import org.rocs.osdrmsa.dto.request.RecordCreateRequest;
+import org.rocs.osdrmsa.dto.request.RecordUpdateRequest;
+import org.rocs.osdrmsa.dto.mapper.RecordDtoMapper;
 import org.rocs.osdrmsa.domain.department.Department;
 import org.rocs.osdrmsa.domain.record.Record;
+import org.rocs.osdrmsa.dto.response.AppealResponse;
 import org.rocs.osdrmsa.service.record.RecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +23,7 @@ public class RecordController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT')")
-    public ResponseEntity<RecordResponse> create(@RequestBody RecordCreateRequest request) {
+    public ResponseEntity<AppealResponse.RecordResponse> create(@RequestBody RecordCreateRequest request) {
         Record created = recordService.createStudentRecord(RecordDtoMapper.toEntity(request));
         if (created == null) {
             return ResponseEntity.badRequest().build();
@@ -33,7 +33,7 @@ public class RecordController {
 
     @PutMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT')")
-    public ResponseEntity<RecordResponse> update(@RequestBody RecordUpdateRequest request) {
+    public ResponseEntity<AppealResponse.RecordResponse> update(@RequestBody RecordUpdateRequest request) {
         Record updated = recordService.updateStudentRecord(RecordDtoMapper.toEntity(request));
         if (updated == null) {
             return ResponseEntity.badRequest().build();
@@ -43,7 +43,7 @@ public class RecordController {
 
     @PatchMapping("/{recordId}/resolve")
     @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT')")
-    public ResponseEntity<RecordResponse> resolve(@PathVariable Long recordId) {
+    public ResponseEntity<AppealResponse.RecordResponse> resolve(@PathVariable Long recordId) {
         Record resolved = recordService.resolveRecord(recordId);
         if (resolved == null) {
             return ResponseEntity.notFound().build();
@@ -54,7 +54,7 @@ public class RecordController {
     @GetMapping("/student/{studentId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT', 'STAFF') "
             + "or (hasRole('USER') and @access.isSelfStudent(#studentId))")
-    public ResponseEntity<List<RecordResponse>> getByStudent(@PathVariable String studentId) {
+    public ResponseEntity<List<AppealResponse.RecordResponse>> getByStudent(@PathVariable String studentId) {
         return ResponseEntity.ok(
                 recordService.getRecordByStudentId(studentId).stream()
                         .map(RecordDtoMapper::toResponse)
@@ -63,7 +63,7 @@ public class RecordController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT')")
-    public ResponseEntity<List<RecordResponse>> getByDepartment(
+    public ResponseEntity<List<AppealResponse.RecordResponse>> getByDepartment(
             @RequestParam Department department,
             @RequestParam String schoolYear) {
         return ResponseEntity.ok(

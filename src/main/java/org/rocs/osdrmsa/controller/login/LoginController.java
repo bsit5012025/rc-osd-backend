@@ -2,8 +2,8 @@ package org.rocs.osdrmsa.controller.login;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
-import org.rocs.osdrmsa.controller.login.dto.LoginRequest;
-import org.rocs.osdrmsa.controller.login.dto.LoginResponse;
+import org.rocs.osdrmsa.dto.request.LoginRequest;
+import org.rocs.osdrmsa.dto.response.LoginResponse;
 import org.rocs.osdrmsa.domain.login.Login;
 import org.rocs.osdrmsa.utils.security.constant.SecurityConstant;
 import org.rocs.osdrmsa.utils.security.jwt.provider.token.JwtService;

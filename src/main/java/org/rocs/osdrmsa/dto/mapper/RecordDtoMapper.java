@@ -1,14 +1,13 @@
-package org.rocs.osdrmsa.controller.record.mapper;
+package org.rocs.osdrmsa.dto.mapper;
 
-import org.rocs.osdrmsa.controller.common.mapper.CommonDtoMapper;
-import org.rocs.osdrmsa.controller.record.dto.RecordCreateRequest;
-import org.rocs.osdrmsa.controller.record.dto.RecordResponse;
-import org.rocs.osdrmsa.controller.record.dto.RecordUpdateRequest;
+import org.rocs.osdrmsa.dto.request.RecordCreateRequest;
+import org.rocs.osdrmsa.dto.request.RecordUpdateRequest;
 import org.rocs.osdrmsa.domain.disciplinary.action.DisciplinaryAction;
 import org.rocs.osdrmsa.domain.enrollment.Enrollment;
 import org.rocs.osdrmsa.domain.offense.Offense;
 import org.rocs.osdrmsa.domain.person.employee.Employee;
 import org.rocs.osdrmsa.domain.record.Record;
+import org.rocs.osdrmsa.dto.response.AppealResponse;
 
 import java.time.LocalDate;
 
@@ -61,11 +60,11 @@ public final class RecordDtoMapper {
         record.setRemarks(remarks);
     }
 
-    public static RecordResponse toResponse(Record record) {
+    public static AppealResponse.RecordResponse toResponse(Record record) {
         if (record == null) {
             return null;
         }
-        return new RecordResponse(
+        return new AppealResponse.RecordResponse(
                 record.getRecordId(),
                 CommonDtoMapper.toEnrollmentSummary(record.getEnrollment()),
                 CommonDtoMapper.toEmployeeSummary(record.getEmployee()),

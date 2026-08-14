@@ -1,11 +1,11 @@
-package org.rocs.osdrmsa.controller.common.mapper;
+package org.rocs.osdrmsa.dto.mapper;
 
-import org.rocs.osdrmsa.controller.common.dto.ActionSummary;
-import org.rocs.osdrmsa.controller.common.dto.EmployeeSummary;
-import org.rocs.osdrmsa.controller.common.dto.EnrollmentSummary;
-import org.rocs.osdrmsa.controller.common.dto.OffenseSummary;
-import org.rocs.osdrmsa.controller.common.dto.RecordSummary;
-import org.rocs.osdrmsa.controller.common.dto.StudentSummary;
+import org.rocs.osdrmsa.dto.summary.ActionSummary;
+import org.rocs.osdrmsa.dto.summary.EmployeeSummary;
+import org.rocs.osdrmsa.dto.summary.EnrollmentSummary;
+import org.rocs.osdrmsa.dto.summary.OffenseSummary;
+import org.rocs.osdrmsa.dto.summary.RecordSummary;
+import org.rocs.osdrmsa.dto.summary.StudentSummary;
 import org.rocs.osdrmsa.domain.disciplinary.action.DisciplinaryAction;
 import org.rocs.osdrmsa.domain.enrollment.Enrollment;
 import org.rocs.osdrmsa.domain.offense.Offense;
