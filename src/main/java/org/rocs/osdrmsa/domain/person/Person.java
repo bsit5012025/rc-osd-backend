@@ -21,4 +21,7 @@ public class Person {
 
     @Column(name = "MIDDLENAME", length = 30)
     private String middleName;
+
+    @Column(name = "DATEOFBIRTH")
+    private java.time.LocalDate dateOfBirth;
 }
