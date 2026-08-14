@@ -2,6 +2,7 @@ package org.rocs.osdrmsa.controller.appeal;
 
 import lombok.RequiredArgsConstructor;
 import org.rocs.osdrmsa.domain.appeal.Appeal;
+import org.rocs.osdrmsa.dto.request.AppealFileRequest;
 import org.rocs.osdrmsa.dto.request.AppealRequest;
 import org.rocs.osdrmsa.service.appeal.AppealService;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,20 @@ public class AppealController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_PREFECT')")
     public List<Appeal> getAppeals(@RequestParam String status) {
         return appealService.getAppealsByStatus(status);
+    }
+
+    @GetMapping("/student/{studentId}")
+    @PreAuthorize("hasAnyRole('ADMIN','PREFECT','STAFF') "
+            + "or (hasRole('USER') and @access.isSelfStudent(#studentId))")
+    public List<Appeal> getAppealsForStudent(@PathVariable String studentId) {
+        return appealService.getAppealsByStudentId(studentId);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Appeal> submitAppeal(@RequestBody AppealFileRequest request) {
+        Appeal appeal = appealService.submitAppeal(request.recordId(), request.enrollmentId(), request.message());
+        return ResponseEntity.ok(appeal);
     }
 
     @PutMapping("/{id}/approve")
