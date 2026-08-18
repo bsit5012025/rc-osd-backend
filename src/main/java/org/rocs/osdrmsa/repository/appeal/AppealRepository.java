@@ -10,5 +10,6 @@ import java.util.List;
 public interface AppealRepository extends JpaRepository<Appeal, Long> {
 
     List<Appeal> findByStatus(String status);
+
     List<Appeal> findByEnrollmentStudentStudentId(String studentId);
 }
