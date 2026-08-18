@@ -15,4 +15,6 @@ public interface AppealService {
     void approveAppeal(Long appealId, String remarks);
 
     void denyAppeal(Long appealId, String remarks);
+
+    List<Appeal> getAppealsByStudentId(String studentId);
 }

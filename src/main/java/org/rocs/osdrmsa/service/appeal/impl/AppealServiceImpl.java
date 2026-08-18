@@ -82,4 +82,8 @@ public class AppealServiceImpl implements AppealService {
 
         appealRepository.save(appeal);
     }
+    @Override
+    public List<Appeal> getAppealsByStudentId(String studentId) {
+        return appealRepository.findByEnrollmentStudentStudentId(studentId);
+    }
 }

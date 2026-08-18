@@ -53,4 +53,10 @@ public class AppealController {
         appealService.denyAppeal(id, request.remarks());
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/student/{studentId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT', 'STAFF') or (hasRole('USER') and @access.isSelfStudent(#studentId))")
+    public ResponseEntity<List<Appeal>> getByStudent(@PathVariable String studentId) {
+        return ResponseEntity.ok(appealService.getAppealsByStudentId(studentId));
+    }
 }
