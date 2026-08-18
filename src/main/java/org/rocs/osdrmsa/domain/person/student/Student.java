@@ -23,7 +23,7 @@ public class Student {
     @Column(name = "studentType")
     private String studentType;
 
-    @Column(name = "contactNumber")
+    @Transient
     private String contactNumber;
 
     @Enumerated(EnumType.STRING)
@@ -35,6 +35,6 @@ public class Student {
             name = "studentGuardian",
             joinColumns = @JoinColumn(name = "studentID"),
             inverseJoinColumns = @JoinColumn(name = "guardianID"))
-    private java.util.List<org.rocs.osdrmsa.domain.person.guardian.Guardian> guardians = new java.util.ArrayList<>();
-
+    private java.util.List<org.rocs.osdrmsa.domain.person.guardian.Guardian> guardians =
+            new java.util.ArrayList<>();
 }
