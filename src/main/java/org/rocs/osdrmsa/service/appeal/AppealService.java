@@ -8,6 +8,10 @@ public interface AppealService {
 
     List<Appeal> getAppealsByStatus(String status);
 
+    List<Appeal> getAppealsByStudentId(String studentId);
+
+    Appeal submitAppeal(Long recordId, Long enrollmentId, String message);
+
     void approveAppeal(Long appealId, String remarks);
 
     void denyAppeal(Long appealId, String remarks);
