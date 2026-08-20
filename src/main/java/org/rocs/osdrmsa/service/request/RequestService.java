@@ -16,4 +16,8 @@ public interface RequestService {
     List<Request> getByStatus(RequestStatus status);
 
     List<Request> getAll();
+
+    List<Request> getMyDepartmentRequests(String username);
+
+    String getMyDepartmentName(String username);
 }

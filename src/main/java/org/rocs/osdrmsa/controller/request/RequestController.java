@@ -1,6 +1,7 @@
 package org.rocs.osdrmsa.controller.request;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.rocs.osdrmsa.dto.request.RequestDecisionRequest;
 import org.rocs.osdrmsa.dto.response.RequestResponse;
 import org.rocs.osdrmsa.dto.request.RequestSubmitRequest;
@@ -39,25 +40,31 @@ public class RequestController {
     @GetMapping("/employee/{employeeId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT', 'STAFF')")
     public ResponseEntity<List<RequestResponse>> getByEmployee(@PathVariable String employeeId) {
-        return ResponseEntity.ok(
-                requestService.getByEmployeeId(employeeId).stream()
-                        .map(RequestDtoMapper::toResponse)
-                        .toList());
+        return ResponseEntity.ok(requestService.getByEmployeeId(employeeId).stream().map(RequestDtoMapper::toResponse).toList()
+        );
+    }
+
+    @GetMapping("/my-department")
+    @PreAuthorize("hasRole('DEPT_HEAD')")
+    public ResponseEntity<List<RequestResponse>> getMyDepartment(Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(requestService.getMyDepartmentRequests(username).stream().map(RequestDtoMapper::toResponse).toList());
+    }
+
+    @GetMapping("/my-department/name")
+    @PreAuthorize("hasRole('DEPT_HEAD')")
+    public ResponseEntity<String> getMyDepartmentName(Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(requestService.getMyDepartmentName(username)
+        );
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT')")
-    public ResponseEntity<List<RequestResponse>> getAll(
-            @RequestParam(required = false) RequestStatus status) {
+    public ResponseEntity<List<RequestResponse>> getAll(@RequestParam(required = false) RequestStatus status) {
         if (status != null) {
-            return ResponseEntity.ok(
-                    requestService.getByStatus(status).stream()
-                            .map(RequestDtoMapper::toResponse)
-                            .toList());
+            return ResponseEntity.ok(requestService.getByStatus(status).stream().map(RequestDtoMapper::toResponse).toList());
         }
-        return ResponseEntity.ok(
-                requestService.getAll().stream()
-                        .map(RequestDtoMapper::toResponse)
-                        .toList());
+        return ResponseEntity.ok(requestService.getAll().stream().map(RequestDtoMapper::toResponse).toList());
     }
 }
