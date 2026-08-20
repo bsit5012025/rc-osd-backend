@@ -13,4 +13,6 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findByEmployeeID(String employeeId);
 
     List<Request> findByStatus(RequestStatus status);
+
+    List<Request> findByEmployeeIDIn(List<String> employeeIds);
 }
