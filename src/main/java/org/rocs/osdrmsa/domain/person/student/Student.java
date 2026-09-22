@@ -23,12 +23,16 @@ public class Student {
     @Column(name = "studentType")
     private String studentType;
 
+    @Column(name = "ISACTIVE", nullable = false)
+    private Boolean isActive = true;
+
     @Transient
     private String contactNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "department")
     private Department department;
+
 
     @ManyToMany
     @JoinTable(

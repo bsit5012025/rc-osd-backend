@@ -22,4 +22,12 @@ public interface StudentService {
     Student update(String studentId, Student student);
 
     void delete(String studentId);
+
+    List<Student> getActive();
+
+    List<Student> getByDepartmentActive(Department department);
+
+    Optional<Student> getActiveById(String studentId);
+
+    Student setActive(String studentId, boolean active);
 }

@@ -23,14 +23,23 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public List<Student> getActive() { return studentRepository.findByIsActiveTrue(); }
+
+    @Override
     public List<Student> getByDepartment(Department department) {
         return studentRepository.findByDepartment(department);
     }
 
     @Override
+    public List<Student> getByDepartmentActive(Department department) { return studentRepository.findByDepartmentAndIsActiveTrue(department); }
+
+    @Override
     public Optional<Student> getById(String studentId) {
         return studentRepository.findById(studentId);
     }
+
+    @Override
+    public Optional<Student> getActiveById(String studentId) { return studentRepository.findByStudentIdAndIsActiveTrue(studentId); }
 
     @Override
     public Optional<Student> getByPersonId(Long personId) {
@@ -61,6 +70,18 @@ public class StudentServiceImpl implements StudentService {
 
         return studentRepository.save(existing);
     }
+
+    @Override
+    public Student setActive(String studentId, boolean active) {
+        Student existing = studentRepository.findById(studentId)
+                .orElseThrow(() ->
+                        new NoSuchElementException("Student not found: " + studentId));
+
+        existing.setIsActive(active);
+
+        return studentRepository.save(existing);
+    }
+
 
     @Override
     public void delete(String studentId) {
