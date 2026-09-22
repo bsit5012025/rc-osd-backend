@@ -23,7 +23,7 @@ public class Student {
     @Column(name = "studentType")
     private String studentType;
 
-    @Transient
+    @Column(name = "contactNumber")
     private String contactNumber;
 
     @Enumerated(EnumType.STRING)
