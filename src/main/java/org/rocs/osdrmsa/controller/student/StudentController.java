@@ -17,13 +17,29 @@ public class StudentController {
     private final StudentService studentService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'PREFECT')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Student>> getAll(
             @RequestParam(required = false) Department department) {
+
         if (department != null) {
             return ResponseEntity.ok(studentService.getByDepartment(department));
         }
+
         return ResponseEntity.ok(studentService.getAll());
+    }
+
+    @GetMapping("/active")
+    @PreAuthorize("hasRole('PREFECT')")
+    public ResponseEntity<List<Student>> getActive(
+            @RequestParam(required = false) Department department) {
+
+        if (department != null) {
+            return ResponseEntity.ok(
+                    studentService.getByDepartmentActive(department)
+            );
+        }
+
+        return ResponseEntity.ok(studentService.getActive());
     }
 
     @GetMapping("/{studentId}")
@@ -45,6 +61,17 @@ public class StudentController {
     public ResponseEntity<Student> update(
             @PathVariable String studentId, @RequestBody Student student) {
         return ResponseEntity.ok(studentService.update(studentId, student));
+    }
+
+    @PatchMapping("/{studentId}/active")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Student> setActive(
+            @PathVariable String studentId,
+            @RequestParam boolean active) {
+
+        return ResponseEntity.ok(
+                studentService.setActive(studentId, active)
+        );
     }
 
     @DeleteMapping("/{studentId}")
