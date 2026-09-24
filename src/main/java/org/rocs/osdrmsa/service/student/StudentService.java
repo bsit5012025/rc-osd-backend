@@ -23,4 +23,12 @@ public interface StudentService {
     Student updateStatus(String studentId, boolean isActive);
 
     void delete(String studentId);
+
+    List<Student> getActive();
+
+    List<Student> getByDepartmentActive(Department department);
+
+    Optional<Student> getActiveById(String studentId);
+
+    Student setActive(String studentId, boolean active);
 }
