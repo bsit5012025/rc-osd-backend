@@ -52,12 +52,25 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student update(String studentId, Student student) {
         Student existing = studentRepository.findById(studentId)
-                .orElseThrow(() -> new NoSuchElementException("Student not found: " + studentId));
+                .orElseThrow(() ->
+                        new NoSuchElementException(
+                                "Student not found: " + studentId
+                        )
+                );
 
-        existing.setPerson(student.getPerson());
         existing.setAddress(student.getAddress());
         existing.setStudentType(student.getStudentType());
         existing.setDepartment(student.getDepartment());
+        existing.setContactNumber(student.getContactNumber());
+        existing.setActive(student.isActive());
+
+        if (student.getPerson() != null &&
+                existing.getPerson() != null) {
+
+            existing.getPerson().setDateOfBirth(
+                    student.getPerson().getDateOfBirth()
+            );
+        }
 
         return studentRepository.save(existing);
     }
