@@ -23,7 +23,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> getActive() { return studentRepository.findByIsActiveTrue(); }
+    public List<Student> getActive() {
+        return studentRepository.findByIsActiveTrue();
+    }
 
     @Override
     public List<Student> getByDepartment(Department department) {
@@ -31,7 +33,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> getByDepartmentActive(Department department) { return studentRepository.findByDepartmentAndIsActiveTrue(department); }
+    public List<Student> getByDepartmentActive(Department department) {
+        return studentRepository.findByDepartmentAndIsActiveTrue(department);
+    }
 
     @Override
     public Optional<Student> getById(String studentId) {
@@ -39,7 +43,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Optional<Student> getActiveById(String studentId) { return studentRepository.findByStudentIdAndIsActiveTrue(studentId); }
+    public Optional<Student> getActiveById(String studentId) {
+        return studentRepository.findByStudentIdAndIsActiveTrue(studentId);
+    }
 
     @Override
     public Optional<Student> getByPersonId(Long personId) {
@@ -94,10 +100,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student updateStatus(
-            String studentId,
-            boolean isActive
-    ) {
+    public Student setActive(String studentId, boolean active) {
 
         Student existing = studentRepository.findById(studentId)
                 .orElseThrow(() ->
@@ -106,22 +109,10 @@ public class StudentServiceImpl implements StudentService {
                         )
                 );
 
-        existing.setActive(isActive);
-
-        return studentRepository.save(existing);
-    }
-
-    @Override
-    public Student setActive(String studentId, boolean active) {
-        Student existing = studentRepository.findById(studentId)
-                .orElseThrow(() ->
-                        new NoSuchElementException("Student not found: " + studentId));
-
         existing.setActive(active);
 
         return studentRepository.save(existing);
     }
-
 
     @Override
     public void delete(String studentId) {

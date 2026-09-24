@@ -10,9 +10,15 @@ public interface StudentService {
 
     List<Student> getAll();
 
+    List<Student> getActive();
+
     List<Student> getByDepartment(Department department);
 
+    List<Student> getByDepartmentActive(Department department);
+
     Optional<Student> getById(String studentId);
+
+    Optional<Student> getActiveById(String studentId);
 
     Optional<Student> getByPersonId(Long personId);
 
@@ -20,15 +26,7 @@ public interface StudentService {
 
     Student update(String studentId, Student student);
 
-    Student updateStatus(String studentId, boolean isActive);
+    Student setActive(String studentId, boolean active);
 
     void delete(String studentId);
-
-    List<Student> getActive();
-
-    List<Student> getByDepartmentActive(Department department);
-
-    Optional<Student> getActiveById(String studentId);
-
-    Student setActive(String studentId, boolean active);
 }
