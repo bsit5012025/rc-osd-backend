@@ -30,6 +30,7 @@ public class Student {
     @Column(name = "department")
     private Department department;
 
+
     @ManyToMany
     @JoinTable(
             name = "studentGuardian",
