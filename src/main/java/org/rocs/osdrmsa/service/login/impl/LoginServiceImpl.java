@@ -58,4 +58,51 @@ public class LoginServiceImpl implements LoginService {
         return loginRepository.findByUsername(username);
     }
 
+    @Override
+    public void changePassword(String username, String currentPassword, String newPassword) {
+
+        if (username == null || username.isBlank() ||
+                currentPassword == null || currentPassword.isBlank() ||
+                newPassword == null || newPassword.isBlank()) {
+
+            throw new IllegalArgumentException("All password fields are required.");
+        }
+
+        Login login = loginRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new InvalidCredentialsException("User account not found."));
+
+        if (!passwordEncoder.matches(currentPassword, login.getPassword())) {
+            throw new InvalidCredentialsException("Current password is incorrect.");
+        }
+
+        if (newPassword.length() < 8) {
+            throw new IllegalArgumentException(
+                    "Password must be at least 8 characters long."
+            );
+        }
+
+        if (!newPassword.matches(".*[A-Z].*")) {
+            throw new IllegalArgumentException(
+                    "Password must contain at least one uppercase letter."
+            );
+        }
+
+        if (!newPassword.matches(".*\\d.*")) {
+            throw new IllegalArgumentException(
+                    "Password must contain at least one number."
+            );
+        }
+
+        if (passwordEncoder.matches(newPassword, login.getPassword())) {
+            throw new IllegalArgumentException(
+                    "New password must be different from the current password."
+            );
+        }
+
+        login.setPassword(passwordEncoder.encode(newPassword));
+
+        loginRepository.save(login);
+    }
+
 }
