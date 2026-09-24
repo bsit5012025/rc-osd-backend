@@ -3,9 +3,11 @@ package org.rocs.osdrmsa.service.student.impl;
 import lombok.RequiredArgsConstructor;
 import org.rocs.osdrmsa.domain.department.Department;
 import org.rocs.osdrmsa.domain.person.student.Student;
+import org.rocs.osdrmsa.repository.login.LoginRepository;
 import org.rocs.osdrmsa.repository.student.StudentRepository;
 import org.rocs.osdrmsa.service.student.StudentService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
+    private final LoginRepository loginRepository;
 
     @Override
     public List<Student> getAll() {
@@ -100,6 +103,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public Student setActive(String studentId, boolean active) {
 
         Student existing = studentRepository.findById(studentId)
@@ -110,6 +114,18 @@ public class StudentServiceImpl implements StudentService {
                 );
 
         existing.setActive(active);
+
+        if (existing.getPerson() != null &&
+                existing.getPerson().getPersonId() != null) {
+
+            Long personId = existing.getPerson().getPersonId();
+
+            loginRepository.findByPerson_PersonId(personId)
+                    .ifPresent(login -> {
+                        login.setActive(active);
+                        loginRepository.save(login);
+                    });
+        }
 
         return studentRepository.save(existing);
     }
