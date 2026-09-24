@@ -14,12 +14,13 @@ public interface StudentService {
 
     Optional<Student> getById(String studentId);
 
-
     Optional<Student> getByPersonId(Long personId);
 
     Student create(Student student);
 
     Student update(String studentId, Student student);
+
+    Student updateStatus(String studentId, boolean isActive);
 
     void delete(String studentId);
 
