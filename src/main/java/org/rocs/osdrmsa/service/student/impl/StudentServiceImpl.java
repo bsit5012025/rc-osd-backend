@@ -117,7 +117,7 @@ public class StudentServiceImpl implements StudentService {
                 .orElseThrow(() ->
                         new NoSuchElementException("Student not found: " + studentId));
 
-        existing.setIsActive(active);
+        existing.setActive(active);
 
         return studentRepository.save(existing);
     }
