@@ -1,5 +1,6 @@
 package org.rocs.osdrmsa.domain.person.student;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.rocs.osdrmsa.domain.department.Department;
@@ -30,6 +31,7 @@ public class Student {
     @Column(name = "contactNumber")
     private String contactNumber;
 
+    @JsonProperty("isActive")
     @Column(name = "isActive", nullable = false)
     private boolean isActive = true;
 
