@@ -23,22 +23,23 @@ public class Student {
     @Column(name = "studentType")
     private String studentType;
 
-    @Column(name = "ISACTIVE", nullable = false)
-    private Boolean isActive = true;
-
-    @Transient
-    private String contactNumber;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "department")
     private Department department;
 
+    @Column(name = "contactNumber")
+    private String contactNumber;
+
+    @Column(name = "isActive", nullable = false)
+    private boolean isActive = true;
 
     @ManyToMany
     @JoinTable(
             name = "studentGuardian",
             joinColumns = @JoinColumn(name = "studentID"),
-            inverseJoinColumns = @JoinColumn(name = "guardianID"))
-    private java.util.List<org.rocs.osdrmsa.domain.person.guardian.Guardian> guardians =
-            new java.util.ArrayList<>();
+            inverseJoinColumns = @JoinColumn(name = "guardianID")
+    )
+    private java.util.List<
+            org.rocs.osdrmsa.domain.person.guardian.Guardian
+            > guardians = new java.util.ArrayList<>();
 }

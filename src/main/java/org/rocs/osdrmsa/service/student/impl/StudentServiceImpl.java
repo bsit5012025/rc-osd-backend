@@ -48,25 +48,65 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student create(Student student) {
-        if (student.getStudentId() == null || student.getStudentId().isBlank()) {
-            throw new IllegalArgumentException("studentId is required.");
+        if (student.getStudentId() == null ||
+                student.getStudentId().isBlank()) {
+
+            throw new IllegalArgumentException(
+                    "studentId is required."
+            );
         }
+
         if (studentRepository.existsById(student.getStudentId())) {
             throw new IllegalArgumentException(
-                    "Student " + student.getStudentId() + " already exists.");
+                    "Student " + student.getStudentId() +
+                            " already exists."
+            );
         }
+
         return studentRepository.save(student);
     }
 
     @Override
     public Student update(String studentId, Student student) {
-        Student existing = studentRepository.findById(studentId)
-                .orElseThrow(() -> new NoSuchElementException("Student not found: " + studentId));
 
-        existing.setPerson(student.getPerson());
+        Student existing = studentRepository.findById(studentId)
+                .orElseThrow(() ->
+                        new NoSuchElementException(
+                                "Student not found: " + studentId
+                        )
+                );
+
         existing.setAddress(student.getAddress());
         existing.setStudentType(student.getStudentType());
         existing.setDepartment(student.getDepartment());
+        existing.setContactNumber(student.getContactNumber());
+        existing.setActive(student.isActive());
+
+        if (student.getPerson() != null &&
+                existing.getPerson() != null) {
+
+            existing.getPerson().setDateOfBirth(
+                    student.getPerson().getDateOfBirth()
+            );
+        }
+
+        return studentRepository.save(existing);
+    }
+
+    @Override
+    public Student updateStatus(
+            String studentId,
+            boolean isActive
+    ) {
+
+        Student existing = studentRepository.findById(studentId)
+                .orElseThrow(() ->
+                        new NoSuchElementException(
+                                "Student not found: " + studentId
+                        )
+                );
+
+        existing.setActive(isActive);
 
         return studentRepository.save(existing);
     }
