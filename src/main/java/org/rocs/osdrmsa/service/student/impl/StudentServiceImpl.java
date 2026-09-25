@@ -2,6 +2,7 @@ package org.rocs.osdrmsa.service.student.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.rocs.osdrmsa.domain.department.Department;
+import org.rocs.osdrmsa.domain.login.Role;
 import org.rocs.osdrmsa.domain.person.student.Student;
 import org.rocs.osdrmsa.repository.login.LoginRepository;
 import org.rocs.osdrmsa.repository.student.StudentRepository;
@@ -89,7 +90,6 @@ public class StudentServiceImpl implements StudentService {
         existing.setStudentType(student.getStudentType());
         existing.setDepartment(student.getDepartment());
         existing.setContactNumber(student.getContactNumber());
-        existing.setActive(student.isActive());
 
         if (student.getPerson() != null &&
                 existing.getPerson() != null) {
@@ -120,7 +120,11 @@ public class StudentServiceImpl implements StudentService {
 
             Long personId = existing.getPerson().getPersonId();
 
-            loginRepository.findByPerson_PersonId(personId)
+            loginRepository
+                    .findByPerson_PersonIdAndRole(
+                            personId,
+                            Role.ROLE_USER
+                    )
                     .ifPresent(login -> {
                         login.setActive(active);
                         loginRepository.save(login);
