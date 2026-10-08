@@ -16,6 +16,8 @@ public interface LoginService {
 
     List<LockedAccountResponse> getLockedAccounts();
 
+    void toggleLockAccount(String username);
+
     void unlockAccount(String username);
 }
 

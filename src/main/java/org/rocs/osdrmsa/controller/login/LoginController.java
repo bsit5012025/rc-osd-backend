@@ -27,44 +27,79 @@ public class LoginController {
     private final JwtService jwtService;
 
     @PostMapping
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody LoginRequest request) {
 
-        Login login = loginService.authenticate(request.username(), request.password());
-        String token = jwtService.generateToken(login);
-
-        return ResponseEntity.ok(new LoginResponse(token, login.getUsername(), login.getRole() != null ? login.getRole().name() : null));
-    }
-
-    @PostMapping("/refresh")
-    public ResponseEntity<LoginResponse> refresh(
-            @RequestHeader(SecurityConstant.AUTH_HEADER) String authorizationHeader) {
-
-        String currentToken = stripBearerPrefix(authorizationHeader);
-
-        Optional<DecodedJWT> decoded = jwtService.verify(currentToken);
-
-        if (decoded.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        String username = jwtService.extractUsername(decoded.get());
-
-        Optional<Login> loginOptional = loginService.getByUsername(username);
-
-        if (loginOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        Login login = loginOptional.get();
-
-        if (login.isLocked() || !login.isActive()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        Login login = loginService.authenticate(
+                request.username(),
+                request.password()
+        );
 
         String token = jwtService.generateToken(login);
 
         return ResponseEntity.ok(
-                new LoginResponse(token, login.getUsername(), login.getRole() != null ? login.getRole().name() : null)
+                new LoginResponse(
+                        token,
+                        login.getUsername(),
+                        login.getRole() != null
+                                ? login.getRole().name()
+                                : null
+                )
+        );
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginResponse> refresh(
+            @RequestHeader(SecurityConstant.AUTH_HEADER)
+            String authorizationHeader) {
+
+        String currentToken =
+                stripBearerPrefix(authorizationHeader);
+
+        Optional<DecodedJWT> decoded =
+                jwtService.verify(currentToken);
+
+        if (decoded.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .build();
+        }
+
+        String username =
+                jwtService.extractUsername(decoded.get());
+
+        Optional<Login> loginOptional =
+                loginService.getByUsername(username);
+
+        if (loginOptional.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .build();
+        }
+
+        Login login = loginOptional.get();
+
+        /*
+         * Only IS_LOCKED controls whether the account
+         * can refresh its token.
+         */
+        if (login.isLocked()) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .build();
+        }
+
+        String token =
+                jwtService.generateToken(login);
+
+        return ResponseEntity.ok(
+                new LoginResponse(
+                        token,
+                        login.getUsername(),
+                        login.getRole() != null
+                                ? login.getRole().name()
+                                : null
+                )
         );
     }
 
@@ -75,42 +110,75 @@ public class LoginController {
 
     @GetMapping("/locked")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<LockedAccountResponse>> getLockedAccounts() {
-        return ResponseEntity.ok(loginService.getLockedAccounts());
+    public ResponseEntity<List<LockedAccountResponse>>
+    getLockedAccounts() {
+
+        return ResponseEntity.ok(
+                loginService.getLockedAccounts()
+        );
     }
 
     @PutMapping("/{username}/unlock")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> unlockAccount(@PathVariable String username) {
+    public ResponseEntity<Void> unlockAccount(
+            @PathVariable String username) {
+
         loginService.unlockAccount(username);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{username}/toggle-lock")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> toggleLockAccount(
+            @PathVariable String username) {
+
+        loginService.toggleLockAccount(username);
+
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<Void> changePassword(@RequestHeader(SecurityConstant.AUTH_HEADER) String authorizationHeader,
-                                               @RequestBody ChangePasswordRequest request) {
+    public ResponseEntity<Void> changePassword(
+            @RequestHeader(SecurityConstant.AUTH_HEADER)
+            String authorizationHeader,
+            @RequestBody ChangePasswordRequest request) {
 
-        String currentToken = stripBearerPrefix(authorizationHeader);
+        String currentToken =
+                stripBearerPrefix(authorizationHeader);
 
-        Optional<DecodedJWT> decoded = jwtService.verify(currentToken);
+        Optional<DecodedJWT> decoded =
+                jwtService.verify(currentToken);
 
         if (decoded.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .build();
         }
 
-        String username = jwtService.extractUsername(decoded.get());
+        String username =
+                jwtService.extractUsername(decoded.get());
 
-        loginService.changePassword(username, request.currentPassword(), request.newPassword());
+        loginService.changePassword(
+                username,
+                request.currentPassword(),
+                request.newPassword()
+        );
 
         return ResponseEntity.ok().build();
     }
 
     private String stripBearerPrefix(String header) {
-        if (header != null && header.startsWith(SecurityConstant.TOKEN_PREFIX)) {
-            return header.substring(SecurityConstant.TOKEN_PREFIX.length());
+
+        if (header != null
+                && header.startsWith(
+                SecurityConstant.TOKEN_PREFIX)) {
+
+            return header.substring(
+                    SecurityConstant.TOKEN_PREFIX.length()
+            );
         }
 
         return header;
     }
 }
-
