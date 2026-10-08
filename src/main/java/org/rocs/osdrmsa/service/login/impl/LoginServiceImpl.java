@@ -2,16 +2,20 @@ package org.rocs.osdrmsa.service.login.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.rocs.osdrmsa.domain.login.Login;
+import org.rocs.osdrmsa.domain.login.Role;
 import org.rocs.osdrmsa.dto.response.LockedAccountResponse;
 import org.rocs.osdrmsa.exception.AccountLockedException;
 import org.rocs.osdrmsa.exception.InvalidCredentialsException;
 import org.rocs.osdrmsa.repository.login.LoginRepository;
+import org.rocs.osdrmsa.repository.student.StudentRepository;
 import org.rocs.osdrmsa.service.login.LoginService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 
@@ -22,12 +26,14 @@ public class LoginServiceImpl implements LoginService {
     private static final String REACTIVATION_MESSAGE =
             "Proceed to prefect office to request for account reactivation";
 
-    private static final int MAX_LOGIN_ATTEMPTS = 5;
+    private static final int MAX_ATTEMPTS = 5;
+    private static final long ADMIN_LOCK_MILLIS = 15 * 60 * 1000L;
 
-    private static final DateTimeFormatter DOB_PASSWORD_FORMAT =
-            DateTimeFormatter.ofPattern("MMddyy");
+    private final Map<String, Integer> adminFailedAttempts = new ConcurrentHashMap<>();
+    private final Map<String, Long> adminLockedUntil = new ConcurrentHashMap<>();
 
     private final LoginRepository loginRepository;
+    private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -44,47 +50,23 @@ public class LoginServiceImpl implements LoginService {
             );
         }
 
-        Login login = loginRepository
-                .findByUsername(username)
-                .orElseThrow(() ->
-                        new InvalidCredentialsException(
-                                "Invalid username or password."
-                        )
-                );
+        Login login = loginRepository.findByUsername(username).orElseThrow(() -> new InvalidCredentialsException("Invalid username or password."));
 
-        boolean isAdmin =
-                login.getRole() != null
-                        && "ROLE_ADMIN".equals(
-                        login.getRole().name()
-                );
+        boolean admin = login.getRole() == Role.ROLE_ADMIN;
 
-        if (!isAdmin && login.isLocked()) {
-            throw new AccountLockedException(
-                    REACTIVATION_MESSAGE
-            );
+        if (admin) {
+            return authenticateAdmin(login, password);
         }
 
-        if (!passwordEncoder.matches(
-                password,
-                login.getPassword()
-        )) {
+        if (login.isLocked()) {
+            throw new AccountLockedException(REACTIVATION_MESSAGE);
+        }
 
-            if (isAdmin) {
+        if (!login.isActive()) {
+            throw new AccountInactiveException(REACTIVATION_MESSAGE);
+        }
 
-                login.setFailedLoginAttempts(0);
-                loginRepository.save(login);
-
-                throw new InvalidCredentialsException(
-                        "Invalid username or password."
-                );
-            }
-
-            int failedAttempts =
-                    login.getFailedLoginAttempts() + 1;
-
-            login.setFailedLoginAttempts(
-                    failedAttempts
-            );
+        if (!passwordEncoder.matches(password, login.getPassword())) {
 
             if (failedAttempts >= MAX_LOGIN_ATTEMPTS) {
 
@@ -97,10 +79,12 @@ public class LoginServiceImpl implements LoginService {
                         )
                 );
 
+            if (failedAttempts >= MAX_ATTEMPTS) {
                 login.setLocked(true);
                 login.setActive(false);
 
                 loginRepository.save(login);
+                syncStudentActive(login, false);
 
                 throw new AccountLockedException(
                         REACTIVATION_MESSAGE
@@ -110,18 +94,8 @@ public class LoginServiceImpl implements LoginService {
             loginRepository.save(login);
 
             throw new InvalidCredentialsException(
-                    "Invalid username or password. "
-                            + "Attempt "
-                            + failedAttempts
-                            + " of "
-                            + MAX_LOGIN_ATTEMPTS
-                            + "."
-            );
-        }
-
-        if (login.isLocked()) {
-            throw new AccountLockedException(
-                    REACTIVATION_MESSAGE
+                    "Invalid username or password. " +
+                            "Attempt " + failedAttempts + " of " + MAX_ATTEMPTS + "."
             );
         }
 
@@ -129,6 +103,58 @@ public class LoginServiceImpl implements LoginService {
         login.setLastLoginDate(new Date());
 
         return loginRepository.save(login);
+    }
+
+    private Login authenticateAdmin(Login login, String password) {
+        String key = login.getUsername().toLowerCase();
+        long now = System.currentTimeMillis();
+
+        Long lockedUntil = adminLockedUntil.get(key);
+        if (lockedUntil != null) {
+            if (now < lockedUntil) {
+                long minutes = Math.max(1, (lockedUntil - now + 59_999) / 60_000);
+                throw new AccountLockedException(
+                        "Too many failed attempts. Try again in " + minutes + " minute(s).");
+            }
+            adminLockedUntil.remove(key);
+            adminFailedAttempts.remove(key);
+        }
+
+        if (!passwordEncoder.matches(password, login.getPassword())) {
+            int failed = adminFailedAttempts.merge(key, 1, Integer::sum);
+
+            if (failed >= MAX_ATTEMPTS) {
+                adminLockedUntil.put(key, now + ADMIN_LOCK_MILLIS);
+                adminFailedAttempts.remove(key);
+                throw new AccountLockedException(
+                        "Too many failed attempts. Try again in 15 minute(s).");
+            }
+
+            throw new InvalidCredentialsException(
+                    "Invalid username or password. Attempt " + failed + " of " + MAX_ATTEMPTS + ".");
+        }
+
+        adminFailedAttempts.remove(key);
+
+        login.setLocked(false);
+        login.setActive(true);
+        login.setFailedLoginAttempts(0);
+        login.setLastLoginDate(new Date());
+
+        return loginRepository.save(login);
+    }
+
+    private void syncStudentActive(Login login, boolean active) {
+        if (login.getRole() != Role.ROLE_USER || login.getPerson() == null
+                || login.getPerson().getPersonId() == null) {
+            return;
+        }
+
+        studentRepository.findByPerson_PersonId(login.getPerson().getPersonId())
+                .ifPresent(student -> {
+                    student.setActive(active);
+                    studentRepository.save(student);
+                });
     }
 
     @Override
@@ -181,6 +207,7 @@ public class LoginServiceImpl implements LoginService {
         login.setFailedLoginAttempts(0);
 
         loginRepository.save(login);
+        syncStudentActive(login, true);
     }
 
     @Override
